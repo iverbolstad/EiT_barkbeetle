@@ -6,10 +6,17 @@ const QueryContext = React.createContext(undefined);
 export const DataProvider = ({children}) => {
 
   const fetcher = useCallback(async function(query) {
-    fetch(query)
-      .then(res => res.json())
-      .then(json => console.log(json));
 
+      const test = await fetch(query, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-API-Token': "" //  token
+        },
+    });
+
+    const data = await test.json();
+    return data;
 }, []);
 
   return (
