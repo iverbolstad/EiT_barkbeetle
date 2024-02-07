@@ -15,7 +15,7 @@ function MyMap() {
 
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
-    googleMapsApiKey: 'AIzaSyD-O_bzY2VDCGNeKxRUBYXG_VTgDG1t4jk',
+    googleMapsApiKey: '',
   });
 
   const googleMapsOptions = {
