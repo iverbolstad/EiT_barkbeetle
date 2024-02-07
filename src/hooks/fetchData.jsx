@@ -11,7 +11,7 @@ export const DataProvider = ({children}) => {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
-            'X-API-Token': "" //  token
+            'X-API-Token': process.env.SPAN_API_TOKEN //  token
         },
     });
 
