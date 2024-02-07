@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
 import ReactJson from 'react-json-view';
 import { useDataFetcher } from '../hooks/fetchData';
@@ -31,7 +31,7 @@ function MyMap() {
     backgroundColor: '#101020',
   };
 
-  const [setMap] = React.useState(null);
+  const [map , setMap] = useState(null);
 
   const [showData, setShowData] = React.useState(false);
 
