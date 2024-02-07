@@ -17,7 +17,7 @@ function MyMap() {
 
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
-    googleMapsApiKey: process.env.GOOGLE_MAPS_API_KEY,
+    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
   });
 
   const googleMapsOptions = {
@@ -31,7 +31,7 @@ function MyMap() {
     backgroundColor: '#101020',
   };
 
-  const [map , setMap] = useState(null);
+  const [map, setMap] = useState(null);
 
   const [showData, setShowData] = React.useState(false);
 
