@@ -3,35 +3,21 @@ import React, { useCallback, useContext } from "react";
 const QueryContext = React.createContext(undefined);
 
 
-export const DataProvider = () => {
+export const DataProvider = ({children}) => {
 
-  const fetcher = useCallback(async function() {
-
-    // const response = await fetch('/proxy/adt/query?api-version=2020-10-31', {
-    //     method: 'POST',
-    //     headers: {
-    //         'Content-Type': 'application/json',
-    //     },
-    //     body: JSON.stringify({
-    //         query
-    //     })
-    // });
-
-    fetch('https://dummyjson.com/products/1')
+  const fetcher = useCallback(async function(query) {
+    fetch(query)
       .then(res => res.json())
       .then(json => console.log(json));
 
-    // Get the data from the response
-    // const data = await response.json();
-    // return data;
 }, []);
+
   return (
           <QueryContext.Provider value={{ fetcher }}>
+            {children}
           </QueryContext.Provider>);
 };
 
-export const useFetcher = () => {
+export const useDataFetcher = () => {
   return useContext(QueryContext);
 }
-
-// export default DataProvider;

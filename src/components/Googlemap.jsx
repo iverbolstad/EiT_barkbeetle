@@ -1,6 +1,8 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
 import ReactJson from 'react-json-view';
+import { useDataFetcher } from '../hooks/fetchData';
+
 
 const containerStyle = {
   width: '1680px',
@@ -29,10 +31,30 @@ function MyMap() {
     backgroundColor: '#101020',
   };
 
-  const [map, setMap] = React.useState(null);
+  const [setMap] = React.useState(null);
 
   const [showData, setShowData] = React.useState(false);
 
+  const { fetcher } = useDataFetcher();
+
+  const fetchSensorData = useCallback(async () => {
+    try {
+      const data = await fetcher(`
+      https://dummyjson.com/products/1
+              `);
+      console.log(data);
+    } catch (e) {
+      console.error(e);
+    }
+  }, [fetcher]);
+
+  useEffect(() => {
+    fetchSensorData();
+    const interval = setInterval(() => {
+      fetchSensorData();
+    }, 60_000 * 30);
+    return () => clearInterval(interval);
+  }, [fetchSensorData]);
 
   const onLoad = React.useCallback(function callback(map) {
     // This is just an example of getting and using the map instance!!! don't just blindly copy!
