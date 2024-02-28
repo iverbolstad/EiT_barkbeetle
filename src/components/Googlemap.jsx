@@ -152,7 +152,7 @@ function MyMap() {
         zoom={5}
         onLoad={onLoad}
         onUnmount={onUnmount}
-        // onClick={setShowData(false)}
+        onClick={() => setShowData(false)}
       >
         {mapMarkers}
         <></>
