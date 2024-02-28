@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState, useMemo } from 'react';
 import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
 import ReactJson from 'react-json-view';
 import { useDataFetcher } from '../hooks/fetchData';
@@ -33,15 +33,54 @@ function MyMap() {
 
   const [map, setMap] = useState(null);
 
-  const [showData, setShowData] = React.useState(false);
+  const [showData, setShowData] = useState(false);
+  const [deviceData, setDeviceData] = useState([])
 
   const { fetcher } = useDataFetcher();
+
+  const onLoad = useCallback(function callback(map) {
+    setMap(map);
+  }, [setMap]);
+
+  const onUnmount = useCallback(function callback(map) {
+    setMap(null);
+  }, [setMap]);
+
+  const fetchDevices = useCallback(async () => {
+    try {
+      const data = await fetcher(`
+      https://api.lab5e.com/span/collections/17kjmdb5n072g2/devices
+              `);
+      data.devices.push(
+          {
+            deviceId: "TEST",
+            tags: {
+                lat: 63,
+                lng: 10
+            },
+          },
+          )
+      data.devices.push(
+          {
+            deviceId: "TEST 2",
+            tags: {
+              lat: 62,
+              lng: 9
+            }
+          }
+        )
+      setDeviceData(data);
+    } catch (e) {
+      console.error(e);
+      setDeviceData([]);
+    }
+  }, [fetcher]);
 
   // https://api.lab5e.com/span/collections/{collectionId}/devices/{deviceId}
   // collid 17kjmdb5n072g2
   // devid 17km3k0e9d3658
   // Header api token
-  const fetchSensorData = useCallback(async () => {
+  const fetchDeviceSensorData = useCallback(async () => {
     try {
       const data = await fetcher(`
       https://api.lab5e.com/span/collections/17kjmdb5n072g2/devices/17km3k0e9d3658
@@ -53,28 +92,59 @@ function MyMap() {
   }, [fetcher]);
 
   useEffect(() => {
-    fetchSensorData();
+    fetchDevices();
+    fetchDeviceSensorData();
     const interval = setInterval(() => {
-      fetchSensorData();
+      fetchDeviceSensorData();
     }, 60_000 * 30);
     return () => clearInterval(interval);
-  }, [fetchSensorData]);
-
-  const onLoad = React.useCallback(function callback(map) {
-    setMap(map);
-  }, [setMap]);
-
-  const onUnmount = React.useCallback(function callback(map) {
-    setMap(null);
-  }, [setMap]);
-
-  const test = {
-    test: "hei"
-  }
+  }, [fetchDeviceSensorData, fetchDevices]);
 
   const onMark = useCallback((tekst) => {
     setShowData(true);
   }, [])
+
+  const renderMarkers = useCallback((location) => {
+
+    let markers = []
+
+    let posLocation = {
+      lat: Number(location.tags.lat),
+      lng: Number(location.tags.lng)
+    }
+
+    markers.push(
+      <Marker
+      key={location.deviceId ? location.ideviceId : undefined}
+      position={posLocation}
+      label={
+        location.deviceId ? location.deviceId : undefined
+      }
+      title={
+        location.deviceId ? location.deviceId : undefined
+      }
+      onClick={() => {
+        onMark("Tester");
+      }}
+      />
+    )
+    return markers;
+
+  }, [onMark]);
+
+  const mapMarkers = useMemo(() => {
+    console.log(deviceData);
+    if (deviceData && Array.isArray(deviceData.devices)) {
+      return deviceData.devices.map((location) =>
+        renderMarkers(location)
+      );
+    }
+    return [];
+  }, [renderMarkers, deviceData]);
+
+  const test = {
+    test: "hei"
+  }
 
   return isLoaded ? (
     <div>
@@ -110,10 +180,7 @@ function MyMap() {
         onUnmount={onUnmount}
         // onClick={setShowData(false)}
       >
-        {/* Child components, such as markers, info windows, etc. */}
-        <Marker position={{ lat: 64, lng: 10 }} onClick={() => {
-              onMark("Tester");
-            }}/>
+        {mapMarkers}
         <></>
       </GoogleMap>
     </div>
