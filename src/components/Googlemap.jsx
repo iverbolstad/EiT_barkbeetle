@@ -1,11 +1,10 @@
 import React, { useCallback, useEffect, useState, useMemo } from 'react';
 import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
-import ReactJson from 'react-json-view';
 import { useDataFetcher } from '../hooks/fetchData';
 import Sidemenu from './Sidebar';
 
 const containerStyle = {
-  width: '150vh',
+  width: '200vh',
   height: '100vh',
 };
 
@@ -115,17 +114,17 @@ function MyMap() {
 
     markers.push(
       <Marker
-      key={location.deviceId ? location.ideviceId : undefined}
-      position={posLocation}
-      label={
-        location.deviceId ? location.deviceId : undefined
-      }
-      title={
-        location.deviceId ? location.deviceId : undefined
-      }
-      onClick={() => {
-        onMark("Tester");
-      }}
+        key={location.deviceId ? location.ideviceId : undefined}
+        position={posLocation}
+        label={
+          location.deviceId ? location.deviceId : undefined
+        }
+        title={
+          location.deviceId ? location.deviceId : undefined
+        }
+        onClick={() => {
+          onMark(location.deviceId ? location.deviceId : "undefined");
+        }}
       />
     )
     return markers;
@@ -142,33 +141,9 @@ function MyMap() {
     return [];
   }, [renderMarkers, deviceData]);
 
-  const test = {
-    test: "hei"
-  }
-
   return isLoaded ? (
     <div style={{display: 'flex'}}>
-      {showData && <div
-            style={{
-              position: 'absolute',
-              top: '5px',
-              right: '5px',
-              zIndex: 1000,
-              backgroundColor: 'white',
-              borderRadius: '5px',
-              paddingLeft: '10px',
-              paddingRight: '10px',
-              maxWidth: '500px',
-              maxHeight: '500px',
-              overflow: 'auto',
-            }}
-          >
-        <ReactJson
-          src={test}
-          displayDataTypes={false}
-        />
-        </div>
-      }
+      {showData && <div></div>}
 
       <GoogleMap
         mapContainerStyle={containerStyle}
@@ -182,7 +157,15 @@ function MyMap() {
         {mapMarkers}
         <></>
       </GoogleMap>
-      <Sidemenu />
+      <div
+        style={{
+          height: '100%',
+          width: '50%',
+          display: showData ? 'block' : 'none',
+        }}
+      >
+
+      </div>
     </div>
   ) : (
     <></>

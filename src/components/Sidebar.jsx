@@ -3,26 +3,20 @@ import { useState } from "react";
 import { ArrowBack, ArrowForward } from "@mui/icons-material";
 import React from "react";
 
-const Sidemenu = () => {
+const Sidemenu = ({ items }) => {
 
 	return (
 		<div>
 			<div style={{ display: 'flex', height: '100vh', width: '300px' }}>
 				<Sidebar>
 					<Menu>
-						<SubMenu label="Charts">
-							<MenuItem> Pie charts</MenuItem>
-							<MenuItem> Line charts</MenuItem>
-							<MenuItem> Bar charts</MenuItem>
-						</SubMenu>
-						<SubMenu label="Maps">
-							<MenuItem> Google maps</MenuItem>
-							<MenuItem> Open street maps</MenuItem>
-						</SubMenu>
-						<SubMenu label="Theme">
-							<MenuItem> Dark</MenuItem>
-							<MenuItem> Light</MenuItem>
-						</SubMenu>
+						{items.map((item, index) => (
+							<SubMenu key={index} label={item.deviceId}>
+								{item.subItems.map((subItem, subIndex) => (
+									<MenuItem key={subIndex}>{subItem}</MenuItem>
+								))}
+							</SubMenu>
+						))}
 					</Menu>
 				</Sidebar>
 			</div>
