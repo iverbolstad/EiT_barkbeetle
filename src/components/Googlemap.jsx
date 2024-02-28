@@ -37,11 +37,22 @@ function MyMap() {
 
   const { fetcher } = useDataFetcher();
 
+  const fetchDevices = useCallback(async () => {
+    try {
+      const data = await fetcher(`
+      https://api.lab5e.com/span/collections/17kjmdb5n072g2/devices
+              `);
+      console.log(data);
+    } catch (e) {
+      console.error(e);
+    }
+  }, [fetcher]);
+
   // https://api.lab5e.com/span/collections/{collectionId}/devices/{deviceId}
   // collid 17kjmdb5n072g2
   // devid 17km3k0e9d3658
   // Header api token
-  const fetchSensorData = useCallback(async () => {
+  const fetchDeviceSensorData = useCallback(async () => {
     try {
       const data = await fetcher(`
       https://api.lab5e.com/span/collections/17kjmdb5n072g2/devices/17km3k0e9d3658
@@ -53,12 +64,15 @@ function MyMap() {
   }, [fetcher]);
 
   useEffect(() => {
-    fetchSensorData();
+    fetchDevices();
+    fetchDeviceSensorData();
     const interval = setInterval(() => {
-      fetchSensorData();
+      fetchDeviceSensorData();
     }, 60_000 * 30);
     return () => clearInterval(interval);
-  }, [fetchSensorData]);
+  }, [fetchDeviceSensorData, fetchDevices]);
+
+  
 
   const onLoad = React.useCallback(function callback(map) {
     // This is just an example of getting and using the map instance!!! don't just blindly copy!
