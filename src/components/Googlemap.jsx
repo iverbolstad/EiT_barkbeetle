@@ -5,8 +5,8 @@ import { useDataFetcher } from '../hooks/fetchData';
 
 
 const containerStyle = {
-  width: '1680px',
-  height: '800px',
+  width: '150vh',
+  height: '100vh',
 };
 
 const center = {
@@ -78,7 +78,6 @@ function MyMap() {
 
   const onMark = useCallback((tekst) => {
     setShowData(true);
-    console.log(tekst)
   }, [])
 
   return isLoaded ? (
@@ -110,7 +109,7 @@ function MyMap() {
         mapContainerStyle={containerStyle}
         options={googleMapsOptions}
         center={center}
-        zoom={4.83}
+        zoom={3.9}
         onLoad={onLoad}
         onUnmount={onUnmount}
         // onClick={setShowData(false)}
