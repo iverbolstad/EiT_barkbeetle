@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState, useMemo } from 'react';
 import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
 import ReactJson from 'react-json-view';
 import { useDataFetcher } from '../hooks/fetchData';
-
+import Sidemenu from './Sidebar';
 
 const containerStyle = {
   width: '150vh',
@@ -147,8 +147,7 @@ function MyMap() {
   }
 
   return isLoaded ? (
-    <div>
-
+    <div style={{display: 'flex'}}>
       {showData && <div
             style={{
               position: 'absolute',
@@ -183,6 +182,7 @@ function MyMap() {
         {mapMarkers}
         <></>
       </GoogleMap>
+      <Sidemenu />
     </div>
   ) : (
     <></>
