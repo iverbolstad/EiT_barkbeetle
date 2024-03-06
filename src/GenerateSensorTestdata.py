@@ -3,7 +3,7 @@ import json
 import jwt
 import random
 
-# Function to generate JSON object for a given timestamp and location
+# Function to generate JSON object for a given timestamp and weight
 def generate_reading(timestamp, weight):
     # Simulate temperature and humidity variation based on time of day
     hour = timestamp.hour
@@ -23,7 +23,9 @@ def generate_reading(timestamp, weight):
     # Generate JSON object
     data = {
         "type": "data",
-        "payload": jwt.encode({"temperature": temperature, "humidity": humidity, "weight": weight}, "secret_key", algorithm="HS256"),
+        "temperature": temperature,
+        "humidity": humidity,
+        "weight": weight,
         "received": str(timestamp.timestamp())
     }
     return data
@@ -31,7 +33,7 @@ def generate_reading(timestamp, weight):
 # Get the current date
 current_date = datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
 
-# Generate JSON objects for each hour of the current day without specific locations
+# Generate JSON objects for each hour of the current day
 readings = {}
 for i in range(24):
     timestamp = current_date + datetime.timedelta(hours=i)
@@ -42,7 +44,17 @@ for i in range(24):
     data = generate_reading(timestamp, weight)
     readings[data_key].append(data)
 
+# Create multiple objects TEST1 to TESTX containing data entries from data0 to dataX
+test_objects = {}
+num_objects = 5  # Change this to the desired number of objects (e.g., 5)
+for j in range(1, num_objects + 1):
+    test_key = "TEST" + str(j)
+    test_objects[test_key] = {}
+    for i in range(24):
+        data_key = "data" + str(i)
+        test_objects[test_key][data_key] = readings[data_key]
+
 # Write JSON objects to file
 with open("SensorTestdata.js", "w") as outfile:
     outfile.write("var testdata = ")
-    json.dump(readings, outfile, indent=2)
+    json.dump(test_objects, outfile, indent=2)
