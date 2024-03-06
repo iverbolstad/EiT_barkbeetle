@@ -1,27 +1,74 @@
-import * as React from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { LineChart } from '@mui/x-charts/LineChart';
+import { useDataFetcher } from '../hooks/fetchData';
 
-export default function DataLineChart() {
-  const uData = [40, 30, 20, 27, 18, 23, 34];
-  const pData = [240, 139, 980, 390, 480, 380, 430];
-  const xLabels = [
-    'Page A',
-    'Page B',
-    'Page C',
-    'Page D',
-    'Page E',
-    'Page F',
-    'Page G',
-  ];
+export default function DataLineChart({ deviceId }) {
+  const { fetcher } = useDataFetcher();
+  const [sensorData, setSensorData] = useState({ temperature: [], weight: [], humidity: [] });
+  const [xLabels, setXLabels] = useState([]);
+
+  const fetchDeviceSensorData = useCallback(async () => {
+    if (!deviceId) return;
+    try {
+      const data = await fetcher(`
+        https://api.lab5e.com/span/collections/17kjmdb5n072g2/devices/${deviceId}/data
+      `);
+      const processedData = data.data.reduce((acc, datapoint) => {
+        const date = new Date(parseInt(datapoint.received));
+          acc.labels.push(date);
+          var actual = datapoint.payload ? JSON.parse(atob(datapoint.payload)) : null;
+          acc.temperature.push(actual.temperature);
+          acc.weight.push(actual.weight);
+          acc.humidity.push(actual.humidity);
+          return acc;
+      }, { temperature: [], weight: [], humidity: [], labels: [] });
+
+      setSensorData({
+        temperature: processedData.temperature,
+        weight: processedData.weight,
+        humidity: processedData.humidity,
+      });
+      setXLabels(processedData.labels);
+    } catch (e) {
+      console.error(e);
+    }
+  }, [fetcher, deviceId]);
+
+  useEffect(() => {
+    fetchDeviceSensorData();
+  }, [fetchDeviceSensorData]);
+
   return (
-    <LineChart
-      width={500}
-      height={300}
-      series={[
-        { data: pData, label: 'Vekt' },
-        { data: uData, label: 'Temperatur' },
-      ]}
-      xAxis={[{ scaleType: 'point', data: xLabels }]}
-    />
+    <>
+      <div>
+        <center>
+          <h1>{deviceId}</h1>
+        </center>
+        <LineChart
+          width={500}
+          height={300}
+          series={[
+            { data: sensorData.weight, label: 'Vekt', color: '#fdb462' },
+          ]}
+          xAxis={[{ scaleType: 'time', data: xLabels }]}
+        />
+        <LineChart
+          width={500}
+          height={300}
+          series={[
+            { data: sensorData.temperature, label: 'Temperatur', color: '#e15759' },
+          ]}
+          xAxis={[{ scaleType: 'time', data: xLabels }]}
+        />
+        <LineChart
+          width={500}
+          height={300}
+          series={[
+            { data: sensorData.humidity, label: 'Luftfuktighet' },
+          ]}
+          xAxis={[{ scaleType: 'time', data: xLabels }]}
+        />
+      </div>
+    </>
   );
 }

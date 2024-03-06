@@ -36,6 +36,7 @@ function MyMap() {
 
   const [showData, setShowData] = useState(false);
   const [deviceData, setDeviceData] = useState([])
+  const [currDevice, setcurrDevice] = useState('')
 
   const { fetcher } = useDataFetcher();
 
@@ -154,28 +155,19 @@ function MyMap() {
   // collid 17kjmdb5n072g2
   // devid 17km3k0e9d3658
   // Header api token
-  const fetchDeviceSensorData = useCallback(async () => {
-    try {
-      const data = await fetcher(`
-      https://api.lab5e.com/span/collections/17kjmdb5n072g2/devices/17km3k0e9d3658
-              `);
-      console.log(data);
-    } catch (e) {
-      console.error(e);
-    }
-  }, [fetcher]);
+
 
   useEffect(() => {
     fetchDevices();
-    fetchDeviceSensorData();
     const interval = setInterval(() => {
-      fetchDeviceSensorData();
+      fetchDevices();
     }, 60_000 * 30);
     return () => clearInterval(interval);
-  }, [fetchDeviceSensorData, fetchDevices]);
+  }, [fetchDevices]);
 
-  const onMark = useCallback((tekst) => {
+  const onMark = useCallback((deviceId) => {
     setShowData(true);
+    setcurrDevice(deviceId);
   }, [])
 
   const renderMarkers = useCallback((location) => {
@@ -218,7 +210,7 @@ function MyMap() {
   }, [renderMarkers, deviceData]);
 
   return isLoaded ? (
-    <div style={{display: 'flex'}}>
+    <div style={{display: 'flex', height: '100vh'}}>
       <Sidemenu items={deviceData}/>
 
       <GoogleMap
@@ -237,9 +229,10 @@ function MyMap() {
           height: '100%',
           width: '50%',
           display: showData ? 'block' : 'none',
+          overflowY: 'auto',
         }}
       >
-        <DataLineChart />
+        <DataLineChart deviceId={currDevice} />
       </div>
     </div>
   ) : (
