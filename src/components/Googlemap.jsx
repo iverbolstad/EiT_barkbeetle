@@ -164,7 +164,7 @@ function MyMap() {
           display: showData ? 'block' : 'none',
         }}
       >
-        <p>TEST</p>
+
       </div>
     </div>
   ) : (
