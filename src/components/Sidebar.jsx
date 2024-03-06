@@ -1,6 +1,4 @@
 import { Sidebar, Menu, MenuItem, SubMenu } from "react-pro-sidebar";
-import { useState } from "react";
-import { ArrowBack, ArrowForward } from "@mui/icons-material";
 import React from "react";
 
 const Sidemenu = ({ items }) => {
@@ -12,7 +10,6 @@ const Sidemenu = ({ items }) => {
 						<Menu>
 							{items.devices.map((item, index) => (
 								<SubMenu key={index} label={item.deviceId}>
-
 									<MenuItem />
 								</SubMenu>
 							))}

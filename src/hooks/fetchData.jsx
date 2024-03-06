@@ -16,9 +16,6 @@ export const DataProvider = ({children}) => {
     });
 
     const data = await test.json();
-    // må endres
-    var actual = data.lastPayload ? JSON.parse(atob(data.lastPayload)) : null;
-    console.log(actual);
     return data;
 }, []);
 
