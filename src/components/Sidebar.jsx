@@ -7,19 +7,18 @@ const Sidemenu = ({ items }) => {
 
 	return (
 		<div>
-			<div style={{ display: 'flex', height: '100vh', width: '300px' }}>
+			{items.devices && (<div>
 				<Sidebar>
-					<Menu>
-						{items.map((item, index) => (
-							<SubMenu key={index} label={item.deviceId}>
-								{item.subItems.map((subItem, subIndex) => (
-									<MenuItem key={subIndex}>{subItem}</MenuItem>
-								))}
-							</SubMenu>
-						))}
-					</Menu>
-				</Sidebar>
-			</div>
+						<Menu>
+							{items.devices.map((item, index) => (
+								<SubMenu key={index} label={item.deviceId}>
+
+									<MenuItem />
+								</SubMenu>
+							))}
+						</Menu>
+					</Sidebar>
+			</div>)}
 		</div>
 	);
 };
