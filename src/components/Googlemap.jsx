@@ -2,6 +2,8 @@ import React, { useCallback, useEffect, useState, useMemo } from 'react';
 import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
 import { useDataFetcher } from '../hooks/fetchData';
 import Sidemenu from './Sidebar';
+import DataLineChart from './LineChart';
+
 
 const containerStyle = {
   width: '200vh',
@@ -68,6 +70,79 @@ function MyMap() {
             }
           }
         )
+        data.devices.push(
+          {
+            deviceId: "TEST 3",
+            tags: {
+              lat: 60.4720,
+              lng: 8.4689
+            }
+          }
+        )
+        data.devices.push(
+          {
+            deviceId: "TEST 4",
+            tags: {
+              lat: 61.8936,
+              lng: 9.6895
+            }
+          }
+        )
+        data.devices.push(
+          {
+            deviceId: "TEST 5",
+            tags: {
+              lat: 59.9139,
+              lng: 10.7522
+            }
+          }
+        )
+        data.devices.push(
+          {
+            deviceId: "TEST 6",
+            tags: {
+              lat: 63.4305,
+              lng: 10.3951
+            }
+          }
+        )
+        data.devices.push(
+          {
+            deviceId: "TEST 7",
+            tags: {
+              lat: 67.2804,
+              lng: 14.4049
+            }
+          }
+        )
+        data.devices.push(
+          {
+            deviceId: "TEST 8",
+            tags: {
+              lat: 68.4384,
+              lng: 17.4272
+            }
+          }
+        )
+        data.devices.push(
+          {
+            deviceId: "TEST 9",
+            tags: {
+              lat: 58.9690,
+              lng: 5.7331
+            }
+          }
+        )
+        data.devices.push(
+          {
+            deviceId: "TEST 10",
+            tags: {
+              lat: 69.6492,
+              lng: 18.9560
+            }
+          }
+        )
+
       setDeviceData(data);
     } catch (e) {
       console.error(e);
@@ -114,7 +189,7 @@ function MyMap() {
 
     markers.push(
       <Marker
-        key={location.deviceId ? location.ideviceId : undefined}
+        key={location.deviceId ? location.deviceId : undefined}
         position={posLocation}
         label={
           location.deviceId ? location.deviceId : undefined
@@ -134,6 +209,7 @@ function MyMap() {
   const mapMarkers = useMemo(() => {
     console.log(deviceData);
     if (deviceData && Array.isArray(deviceData.devices)) {
+      console.log('HEER'+deviceData)
       return deviceData.devices.map((location) =>
         renderMarkers(location)
       );
@@ -143,7 +219,7 @@ function MyMap() {
 
   return isLoaded ? (
     <div style={{display: 'flex'}}>
-      {showData && <div></div>}
+      <Sidemenu items={deviceData}/>
 
       <GoogleMap
         mapContainerStyle={containerStyle}
@@ -155,7 +231,6 @@ function MyMap() {
         onClick={() => setShowData(false)}
       >
         {mapMarkers}
-        <></>
       </GoogleMap>
       <div
         style={{
@@ -164,7 +239,7 @@ function MyMap() {
           display: showData ? 'block' : 'none',
         }}
       >
-
+        <DataLineChart />
       </div>
     </div>
   ) : (
