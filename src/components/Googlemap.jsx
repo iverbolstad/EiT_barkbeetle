@@ -55,7 +55,7 @@ function MyMap() {
               `);
       data.devices.push(
           {
-            deviceId: "TEST",
+            deviceId: "TEST 1",
             tags: {
                 lat: 63,
                 lng: 10
